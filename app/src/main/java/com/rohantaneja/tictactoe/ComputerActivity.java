@@ -90,6 +90,11 @@ public class ComputerActivity extends AppCompatActivity {
 
     public void performMove(int selectedButtonID, Button selectedButton) {
 
+        if (selectedButtonID == -1 && selectedButton == null) {
+            checkResult();
+            return;
+        }
+
         selectedButton.setEnabled(false);
 
         if (isPlayerTurn) {
@@ -217,14 +222,29 @@ public class ComputerActivity extends AppCompatActivity {
         }
 
         Random random = new Random();
-        int availableBoxesArrayIndexSelectedByComputer = random.nextInt(availableButtonsForComputer.size() + 0) - 0;
-        int selectedButtonID = availableButtonsForComputer.get(availableBoxesArrayIndexSelectedByComputer);
+
+        int availableBoxesArrayIndexSelectedByComputer;
+        int selectedButtonID;
+
+        if (availableButtonsForComputer.size() == 0) {
+            //Will fire when no boxes are left for the computer
+            disableButtonClicks();
+            performMove(-1, null);
+            return;
+        }
+
+        availableBoxesArrayIndexSelectedByComputer = random.nextInt(availableButtonsForComputer.size() + 0) - 0;
+        selectedButtonID = availableButtonsForComputer.get(availableBoxesArrayIndexSelectedByComputer);
+
         enableTotalAvailableButtons();
         totalAvailableButtons.remove(Integer.valueOf(selectedButtonID));
+
         disableTotalAvailableButtons();
+
         Button selectedButton = buttonArray[selectedButtonID - 1];
 
         performMove(selectedButtonID, selectedButton);
+
     }
 
     public void enableButtonClicks() {
